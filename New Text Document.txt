@@ -1,0 +1,125 @@
+show databases;
+
+create database if not exists first_example;
+
+use first_example;
+
+show tables;
+
+CREATE TABLE if not exists person(person_id smallint unsigned,
+fname varchar(20),
+lname varchar(20),
+gender enum('M','F'),
+birth_date DATE,
+street varchar(30),
+city varchar(20),
+state varchar(20),
+country varchar(20),
+postal_code varchar(20),
+constraint pk_person primary key(person_id)
+);
+
+show tables;
+
+desc person;
+desc favorite_food;
+
+create table if not exists favorite_food(
+	person_id smallint unsigned,
+    food varchar(20),
+    constraint pk_favorite_food primary key (person_id, food),
+    constraint fk_favorite_food_person_id foreign key(person_id) references person(person_id)
+);
+
+desc information_schema.table_constraints;
+
+select * from information_schema.table_constraints where constraint_schema = 'first_example';
+select CONSTRAINT_NAME from information_schema.table_constraints where table_name = 'person';
+
+desc person;
+
+insert into person values ('1','Carolina','Silva','F','1979-08-21','rua tal','Cidade J','RJ', 'Brasil', '26054-89');
+insert into person values ('2','Carolina','Silva','F','1979-08-21','rua tal','Cidade J','RJ', 'Brasil', '26054-89');
+insert into person values ('3','Carolina','Silva','F','1979-08-21','rua tal','Cidade J','RJ', 'Brasil', '26054-89'),
+('4','Carolina','Silva','F','1979-08-21','rua tal','Cidade J','RJ', 'Brasil', '26054-89');
+insert into person values ('5','Roberta','Silva','F','1979-08-21','rua tal','Cidade J','RJ', 'Brasil', '26054-89'),
+('6','Luiz','Silva','F','1979-08-21','rua tal','Cidade J','RJ', 'Brasil', '26054-89');
+
+select * from person;
+
+delete from person where person_id = 2 or person_id = 3 or person_id = 4;
+
+insert into favorite_food values (1, 'lasanha'),(5, 'carne assada'), (6, 'fetuccine');
+select * from favorite_food;
+
+select now();
+
+create schema if not exists company;
+create table company.employee(
+	fname varchar(15) not null,
+    minit char,
+    lname varchar(15) not null,
+    ssn char(9) not null,
+    bdate date,
+    address varchar(30),
+    sex char,
+    salary decimal(10,2),
+    super_ssn char(9),
+    dno int not null,
+    primary key(ssn)
+);
+
+use company;
+create table company.department(
+dname varchar(15) not null,
+dnumber int not null,
+mgr_ssn char(9),
+mgr_start_date date,
+primary key(dnumber),
+unique(dname),
+foreign key (mgr_ssn) references employee(ssn)
+);
+
+create table company.dept_locations(
+	dnumber int not null,
+    dlocation varchar(15) not null,
+    primary key(dnumber, dlocation),
+    foreign key(dnumber) references department(dnumber)
+);
+
+create table company.project(
+pname varchar(15) not null,
+pnumber int not null,
+plocation varchar(15),
+dnum int not null,
+primary key(pnumber),
+unique(pname),
+foreign key(dnum) references department(dnumber)
+);
+
+create table company.works_on(
+	essn char(9) not null,
+    pno int not null,
+    hours decimal(3,1) not null,
+    primary key(essn, pno),
+    foreign key(essn) references employee(ssn),
+    foreign key(pno) references project(pnumber)
+);
+
+create table company.dependent(
+	essn char(9) not null,
+    dependent_name varchar(15) not null,
+    sex char,
+    bdate date,
+    relationship varchar(3),
+    primary key(essn, dependent_name),
+    foreign key(essn) references employee(ssn)
+);
+
+
+show tables;
+
+desc department;
+desc employee;
+desc works_on;
+desc dependent;
