@@ -185,14 +185,13 @@ create table company_constraints.works_on(
     constraint fk_project_works_on foreign key(pno) references project(pnumber)
 );
 
+drop table company_constraints.dependent;
 create table company_constraints.dependent(
 	essn char(9) not null,
     dependent_name varchar(15) not null,
     sex char,
     bdate date,
     relationship varchar(3),
-    age int not null,
-    constraint chk_age_dependent check (age < 22),
     primary key(essn, dependent_name),
     constraint fk_dependent foreign key(essn) references employee(ssn)
 );
@@ -208,3 +207,66 @@ alter table company_constraints.employee
     alter table company_constraints.dept_locations drop constraint fk_dept_locations;
     alter table company_constraints.department add constraint fk_dept foreign key(mgr_ssn) references company_constraints.employee(ssn) on update cascade;
     alter table company_constraints.dept_locations add constraint fk_dept_locations foreign key (dnumber) references company_constraints.department(dnumber) on delete cascade on update cascade;
+    
+    use company_constraints;
+    
+    show tables;
+    
+    insert into employee values('John','B','Smith',123456789,'1965-01-09','711-Fondren-Houston-TX','M',50000,null,5);
+    
+    insert into employee values('Franklin','B','Smith',123456781,'1965-01-09','711-Fondren-Houston-TX','M',50000,null,5),
+    ('Alicia','B','Smith',123456782,'1965-01-09','711-Fondren-Houston-TX','M',50000,null,5),
+    ('Jennifer','B','Smith',123456783,'1965-01-09','711-Fondren-Houston-TX','M',50000,null,5),
+    ('Ramesh','B','Smith',123456784,'1965-01-09','711-Fondren-Houston-TX','M',50000,null,5),
+    ('Joyce','B','Smith',123456785,'1965-01-09','711-Fondren-Houston-TX','M',50000,null,5),
+    ('Ahmad','B','Smith',123456786,'1965-01-09','711-Fondren-Houston-TX','M',50000,null,5),
+    ('James','B','Smith',123456787,'1965-01-09','711-Fondren-Houston-TX','M',50000,null,5);
+    
+    
+    select * from employee;
+    
+    insert into dependent values (123456782,'Alice','F','1984-04-05','Dau'),
+    (123456781,'Theodore','F','1984-04-05','Dau'),
+    (123456783,'Joy','F','1984-04-05','Dau'),
+    (123456784,'Abner','F','1984-04-05','Dau'),
+    (123456785,'Michael','F','1984-04-05','Dau'),
+    (123456786,'Alice','F','1984-04-05','Dau');
+    
+    select * from dependent;
+    
+    desc dependent;
+    
+    insert into department values ('Research',5,123456781,'1988-05-22','1986-05-22'),
+    ('Administration',6,123456781,'1988-05-22','1986-05-22'),
+    ('Headquarters',7,123456781,'1988-05-22','1986-05-22');
+    
+    insert into dept_locations values (5, 'Houston'),
+    (6, 'Stafford'),
+    (7, 'Bellaire'),
+    (7, 'Sugarland'),
+    (7, 'Houston');
+    
+    insert into project values ('Product',1,'Bellaire',5),
+    ('Product1',2,'Bellaire',5),
+    ('Product2',3,'Bellaire',5),
+    ('Product3',4,'Bellaire',5),
+    ('Product4',5,'Bellaire',5),
+    ('Product5',6,'Bellaire',5);
+    
+    insert into works_on values (123456781,5,32.5),
+    (123456781,6,32.5),
+    (123456781,2,32.5),
+    (123456783,5,32.5);
+    
+    desc works_on;
+    
+    show tables;
+    select * from dependent;
+    
+select * from dependent;
+select * from dept_locations;
+select * from employee;
+select * from project;
+select * from works_on;
+
+load data infile 'path' into table employee fields terminated by ',' lines terminated by ';'
