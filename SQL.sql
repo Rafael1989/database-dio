@@ -269,4 +269,49 @@ select * from employee;
 select * from project;
 select * from works_on;
 
-load data infile 'path' into table employee fields terminated by ',' lines terminated by ';'
+load data infile 'path' into table employee fields terminated by ',' lines terminated by ';';
+
+select * from employee;
+select ssn, fname, dname from employee e, department d where (e.ssn = d.mgr_ssn);
+
+select fname, dependent_name, relationship from employee, dependent where essn = ssn;
+
+select bdate, address from employee where fname = 'John' and minit = 'B' and lname = 'Smith';
+
+select * from department where dname = 'Research';
+
+select fname, lname, address from employee, department where dname = 'Research' and dnumber = dno;
+
+desc works_on;
+select * from project;
+
+select pname, essn, fname, hours from project, works_on, employee where pnumber = pno and essn = ssn;
+
+select fname, employee.fname, address from employee, department where department.dname = 'Research' and department.dnumber = employee.dno;
+
+select employee.fname, employee.lname, employee.address from employee, department where department.dname = 'Research' and department.dnumber = employee.dno;
+
+select e.fname, e.lname, s.fname, s.lname from employee as e, employee as s where e.super_ssn = s.ssn;
+
+select e.fname, e.lname, e.address from employee as e, department as d where d.dname = 'Research' and d.dnumber = e.dno;
+
+use company_constraints;
+show tables;
+
+desc department;
+desc dept_locations;
+
+select * from department;
+select * from dept_locations;
+
+select dname as department_name, l.dlocation from department as d, dept_locations as l where d.dnumber = l.dnumber;
+
+select * from employee;
+select concat(fname, ' ', lname) as Employee from employee;
+use first_example;
+desc person;
+update person set birth_date = str_to_date('DEC-21-1980', '%b-%d-%Y') where person_id = 1;
+
+ 
+
+
