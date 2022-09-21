@@ -317,3 +317,79 @@ select bdate, address from employee where fname = 'John' and minit = 'B' and lna
 select * from department where dname = 'Research' or dname = 'Administration';
 select concat(fname, ' ', lname) as Complete_name from employee, department where dname = 'Research' and dnumber = dno;
 
+(select distinct pnumber from project, department, employee where dnum = dnumber and mgr_ssn = ssn and lname = 'Smith')
+UNION
+(select distinct pnumber from project, works_on, employee where pnumber = pno and essn = ssn and lname = 'Smith');
+
+create database teste;
+
+use teste;
+
+create table R(
+	A char(2)
+    );
+    
+    create table S(
+    A char(2)
+    );
+    
+    insert into R(A) values ('a1'),('a2'),('a2'),('a3');
+    insert into S(A) values ('a1'),('a1'),('a2'),('a3'),('a4'),('a5');
+    
+    select * from R;
+    select * from S;
+    
+    select * from S where A not in (select A from R);
+    
+    (select distinct R.A from R)
+    UNION
+    (select distinct S.A from S);
+    
+     (select R.A from R)
+    UNION
+    (select S.A from S);
+    
+    select distinct R.A from R where R.A in (select S.A from S);
+    
+    select distinct pnumber
+    from project
+    where pnumber in 
+    (select pnumber
+    from project, department, employee
+    where dnum = dnumber and 
+    mgr_ssn = ssn and lname = 'Smith')
+    or
+    pnumber in 
+    (select pno
+    from works_on, employee
+    where essn = ssn and lname = 'Smith');
+    
+    select e.fname, e.lname from employee as e where exists (
+    select * from dependent as d where e.ssn = d.essn and e.sex = d.sex and e.fname = d.dependent_name);
+    
+    
+    use company_constraints;
+    select distinct pnumber from project where pnumber in 
+    (select distinct pno from works_on, employee where (essn = ssn and lname = 'Smith')
+     or
+    (select pnumber from project, department, employee where (mgr_ssn = ssn and lname = 'Wallace' and dnum = dnumber))
+    );
+    
+    select pno, hours,essn from works_on;
+    
+    select distinct * from works_on where (pno, hours) in (select pno, hours from works_on where essn = 123456781);
+    
+    select e.fname, e.lname, d.dependent_name from employee as e, dependent d where exists (select * from dependent as d where e.ssn = d.essn and Relationship = 'dau');
+    
+    select e.fname, e.lname, d.dependent_name from employee as e, dependent d where not exists (select * from dependent as d where e.ssn = d.essn and Relationship = 'dau');
+    
+    select e.fname, e.lname from employee as e, department d where (e.ssn = d.mgr_ssn) and exists (select * from dependent as d where e.ssn = d.essn);
+    
+    
+    select fname, lname from employee where (select count(*) from dependent where ssn=essn)>0;
+    
+    select distinct essn, pno from works_on where pno in (1,2,3);
+    
+    
+    
+
