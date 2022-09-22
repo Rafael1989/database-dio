@@ -390,6 +390,69 @@ create table R(
     
     select distinct essn, pno from works_on where pno in (1,2,3);
     
+    select fname, lname, dno from employee order by dno;
+    
+    select fname, lname, dno from employee;
+    
+    select fname, lname, dno from employee order by dno desc;
+    
+    select * from employee order by fname, lname;
+    
+    select distinct d.dname, concat(e.fname, ' ', e.lname) as Manager, address
+    from department as d, employee e, works_on as w, project p 
+    where (d.dnumber = e.dno and e.ssn = d.mgr_ssn and w.pno = p.pnumber)
+    order by d.dname, e.fname, e.lname;
+    
+    select distinct d.dname as department, concat(e.fname, ' ', e.lname) as employee, p.pname as project_name
+    from department as d, employee e, works_on w, project p
+    where (d.dnumber = e.dno and e.ssn = w.essn and w.pno = p.pnumber)
+    order by d.dname desc, e.fname asc, e.lname asc;
+    
+    select * from employee;
+    select count(*) from employee;
+    select count(*) from employee, department where dno=dnumber and dname = 'Research';
+    
+    select dno, count(*) as number_of_employees, round(avg(salary),2) as salary_avg from employee group by dno;
+    
+    select pnumber, pname, count(*) from project, works_on where pnumber = pno group by pnumber, pname;
+    
+    select count(distinct salary) from employee;
+    
+    select sum(salary) as total_sal, max(salary) as max_sal, min(salary) min_sal, avg(salary) avg_sal from employee;
+    
+    select sum(salary) as total_sal, max(salary) as max_sal, min(salary) min_sal, avg(salary) avg_sal from (employee join department on dno = dnumber)
+    where dname = 'Research';
+    
+    select lname, fname from employee where
+    (select count(*) from dependent where ssn = essn) >= 2;
+    
+    select pnumber, pname, count(*) number_register, round(avg(salary),2) avg_salary from project, works_on, employee where pnumber = pno and ssn = essn group by dno order by avg_salary desc;
+    
+    
+    select pnumber, pname, count(*)
+    from project, works_on
+    where pnumber = pno
+    group by pnumber, pname
+    having count(*) < 2;
+    
+    select dno, count(*)
+    from employee
+    where salary > 40000
+    group by dno
+    having count(*) > 1;
+    
+    select dno, count(*) from employee
+    where salary > 20000 and dno in (select dno from employee group by dno having count(*) > 5)
+    group by dno;
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
 
