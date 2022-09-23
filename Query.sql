@@ -445,6 +445,197 @@ create table R(
     where salary > 20000 and dno in (select dno from employee group by dno having count(*) > 5)
     group by dno;
     
+    show databases;
+    use company_constraints;
+    
+    show tables;
+    
+    select fname, salary, dno from employee;
+    
+    update employee set salary =
+    case 
+		when dno = 5 then salary + 2000
+        when dno = 4 then salary + 1500
+        when dno = 1 then salary + 3000
+        else salary + 0
+	end;
+    
+    desc employee;
+    desc works_on;
+
+select * from employee, works_on where ssn = essn;
+select * from employee join works_on on ssn = essn; 
+
+select * from employee join department on ssn = mgr_ssn; 
+
+select fname, lname, address from (employee join department on dno=dnumber) where dname = 'Research';
+
+select * from dept_locations;
+select * from department;
+
+select dname as Department, dept_create_date as StartDate, dlocation as Location from department inner join dept_locations using (dnumber) order by StartDate;
+
+select * from employee cross join dependent;
+
+select concat(fname, ' ', lname) as Complete_Name, dno as DeptNumber, pname as ProjectName, pno as ProjectNumber, plocation as Location from employee 
+	inner join works_on on ssn = essn 
+    inner join project on pno = pnumber
+    where pname like 'Product%' 
+    order by pnumber;
+    
+select dnumber, dname, concat(fname, ' ', lname) as Manager, salary, round(salary*0.05,2) as Bonus  from department 
+	inner join dept_locations using (dnumber)
+    inner join employee on ssn = mgr_ssn
+    group by dnumber
+    having count(*) > 1;
+    
+    select dnumber, dname, concat(fname, ' ', lname) as Manager, salary, round(salary*0.05,2) as Bonus  from department 
+	inner join dept_locations using (dnumber)
+    inner join (dependent inner join employee on ssn = essn) on ssn = mgr_ssn
+    group by dnumber
+    having count(*) > 1;
+    
+        select dnumber, dname, concat(fname, ' ', lname) as Manager, salary, round(salary*0.05,2) as Bonus  from department 
+	inner join dept_locations using (dnumber)
+    inner join (dependent inner join employee on ssn = essn) on ssn = mgr_ssn
+    group by dnumber;
+    
+select * from employee;
+select * from dependent;
+select * from employee inner join dependent on ssn = essn;
+select * from employee join dependent on ssn = essn;
+select * from employee left join dependent on ssn = essn;
+select * from employee left outer join dependent on ssn = essn;
+drop database ecommerce;
+create database ecommerce;
+
+use ecommerce;
+
+create table clients(
+	idClient int auto_increment primary key,
+    fname varchar(10),
+    minit char(3),
+    lname varchar(20),
+    cpf char(11) not null,
+    address varchar(30),
+    constraint unique_cpf_client unique (cpf)
+);
+
+create table product(
+	idProduct int auto_increment primary key,
+    pname varchar(10) not null,
+    classification_kids boolean default false,
+    category enum('Eletronico','Vestimenta','Brinquedos','Alimentos','Moveis') not null,
+    avaliacao float default 0,
+    size varchar(10)
+);
+
+create table payments(
+	idClient int,
+    idPayment int,
+    typePayment enum('Boleto','Cartao','Dois cartoes'),
+    limitAvailable float,
+    primary key(idClient, idPayment)
+);
+
+drop table orders;
+create table orders(
+	idOrder int auto_increment primary key,
+    idOrderClient int,
+    orderStatus enum('Cancelado','Confirmado','Em processamento') default 'Em processamento',
+    orderDescription varchar(255),
+    sendValue float default 10,
+    paymentCash boolean default false,
+    constraint fk_orders_client foreign key (idOrderClient) references clients(idClient)
+		on update cascade
+);
+
+create table productStorage(
+	idProdStorage int auto_increment primary key,
+    storageLocation varchar(255),
+    quantity int default 0
+);
+
+create table supplier(
+	idSupplier int auto_increment primary key,
+    socialName varchar(255) not null,
+    cnpj char(15) not null,
+    contact varchar(11) not null,
+    constraint unique_supplier unique(cnpj)
+);
+
+create table seller(
+	idSeller int auto_increment primary key,
+    socialName varchar(255) not null,
+    abstName varchar(255),
+    cnpj char(15),
+    cpf char(9),
+    location varchar(255),
+    contact char(11) not null,
+    constraint unique_cnpj_seller unique(cnpj),
+    constraint unique_cpf_seller unique(cpf)
+);
+
+create table productSeller(
+	idPseller int,
+    idPproduct int,
+    prodQuantity int default 1,
+    primary key(idPseller,idPproduct),
+    constraint fk_product_seller foreign key (idPseller) references seller(idSeller),
+    constraint fk_product_product foreign key (idPproduct) references product(idProduct)
+);
+
+create table productOrder(
+	idPOproduct int,
+    idPOorder int,
+    poQuantity int default 1,
+    poStatus enum('Disponível','Sem estoque') default 'Disponivel',
+    primary key(idPOproduct,idPOorder),
+    constraint fk_productorder_order foreign key (idPOorder) references orders(idOrder),
+    constraint fk_productorder_product foreign key (idPOproduct) references product(idProduct)
+);
+
+create table storageLocation(
+	idLproduct int,
+    idLstorage int,
+    location varchar(255) not null,
+    primary key(idLproduct,idLstorage),
+    constraint fk_storage_location_storage foreign key (idLstorage) references productStorage(idProdStorage),
+    constraint fk_storage_location_product foreign key (idLproduct) references product(idProduct)
+);
+
+show tables;
+
+use information_schema;
+show tables;
+desc referential_constraints;
+select * from referential_constraints where constraint_schema = 'ecommerce';
+use ecommerce;
+insert into clients (fname, minit, lname, cpf, address) values
+	('Maria','M','Silva',123456789, 'rua silva de prata 29'),
+    ('Matheus','M','Silva',123456781, 'rua silva de prata 29'),
+    ('Ricardo','M','Silva',123456782, 'rua silva de prata 29'),
+    ('Julia','M','Silva',123456783, 'rua silva de prata 29'),
+    ('Roberta','M','Silva',123456784, 'rua silva de prata 29'),
+    ('Isabela','M','Silva',123456785, 'rua silva de prata 29');
+    
+    insert into product (pname, classification_kids, category, avaliacao, size) values
+		('Fone',false, 'Eletronico','4',null),
+        ('Barbie',false, 'Eletronico','4',null),
+        ('Body',false, 'Eletronico','4',null),
+        ('Microfone',false, 'Eletronico','4',null),
+        ('Sofá',false, 'Eletronico','4',null);
+select * from clients;
+insert into orders (idOrderClient, orderStatus, orderDescription, sendValue, paymentCash) values
+	(7,default,'app',null,1),
+    (8,default,'app',null,1),
+    (9,'Confirmado','app',null,1),
+    (10,default,'app',null,1);
+
+
+
+        
+    
     
     
     
