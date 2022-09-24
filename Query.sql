@@ -631,8 +631,133 @@ insert into orders (idOrderClient, orderStatus, orderDescription, sendValue, pay
     (8,default,'app',null,1),
     (9,'Confirmado','app',null,1),
     (10,default,'app',null,1);
+    
+    select * from orders;
+    select * from product;
 
+desc productOrder;
+insert into productOrder (idPOproduct,idPOorder,poQuantity,poStatus) values
+(1,13,2,null),
+(2,14,1,null),
+(3,15,1,null);
 
+insert into productStorage (storageLocation, quantity) values
+('Rio de Janeiro',1000),
+('Rio de Janeiro',1000),
+('Rio de Janeiro',1000),
+('Rio de Janeiro',1000),
+('Rio de Janeiro',1000),
+('Rio de Janeiro',1000);
+
+insert into storageLocation (idLproduct, idLstorage, location) values 
+(1,2,'RJ'),
+(2,6,'GO');
+
+insert into supplier (socialName, cnpj, contact) values 
+('Almeida e filhos',123456789123456,'21985474'),
+('Almeida e filhos',123456789123452,'21985474'),
+('Almeida e filhos',123456789123453,'21985474');
+select * from supplier;
+select * from product;
+show tables;
+desc productSupplier;
+insert into productSupplier (idPsSupplier, idPsProduct, quantity) values
+(4,1,500),
+(5,2,400),
+(6,4,633),
+(4,3,5),
+(5,5,10);
+
+create table productSupplier(
+	idPsSupplier int,
+    idPsProduct int,
+    quantity int default 1,
+    primary key(idPsSupplier,idPsProduct),
+    constraint fk_productsupplier_supplier foreign key (idPsSupplier) references supplier(idSupplier),
+    constraint fk_productsupplier_product foreign key (idPsProduct) references product(idProduct)
+);
+
+insert into seller (socialName, abstName, cnpj, cpf, location, contact) values 
+	('Tech eletronics',null, 123456789456321,null,'Rio de Janeiro',219946287),
+    ('Botique Durgas',null, null,null,'Rio de Janeiro',219946287),
+    ('Tech eletronics',null, 123456789456325,null,'Rio de Janeiro',219946287);
+    select * from product;
+    insert into productSeller (idPseller, idPproduct, prodQuantity) values
+    (4,1,80),
+    (5,2,10);
+    
+    select count(*) from clients;
+    
+    select * from clients c, orders o where c.idClient = idOrderClient;
+    
+    select fname, lname, idOrder, orderStatus from clients c, orders o where c.idClient = idOrderClient;
+    select concat(fname, ' ', lname) as Client, idOrder as Request, orderStatus as Status from clients c, orders o where c.idClient = idOrderClient;
+    
+    select * from clients;
+    show tables;
+    desc orders;
+    insert into orders (idOrderClient, orderStatus, orderDescription, sendValue, paymentCash) values
+	(7,default,'app',null,1);
+    
+    select count(*) from clients c, orders o 
+		where c.idClient = idOrderClient;
+        
+        
+        
+        select *
+			from clients 
+			INNER JOIN orders ON idClient = idOrderClient
+            inner join productOrder p on p.idPOorder = idOrder
+			group by idClient;
+            
+            show tables;
+            
+            desc payments;
+            
+            select * from payments;
+            
+create table delivery(
+	idDelivery int auto_increment primary key,
+	idOrder int,
+	status enum('To do','Doing','Done') default 'To do',
+	trackCode int,
+	constraint fk_orders_delivery foreign key (idOrder) references orders(idOrder)
+);
+
+select idClient, fname, count(*) as Number_of_orders from clients INNER JOIN orders ON idClient = idOrderClient
+        group by idClient;
+        
+        show tables;
+        
+        desc seller;
+        desc supplier;
+        select * from seller;
+        select * from supplier;
+        
+        select * from seller s inner join supplier p on s.cnpj = p.cnpj;
+        select * from productsupplier;
+        select * from product;
+        select * from supplier;
+        select * from productstorage;
+        
+        desc product;
+        desc productsupplier;
+        
+        select * from product p 
+        inner join productsupplier s on p.idProduct = s.idPsProduct
+        inner join productstorage e on p.idProduct = e.idProdStorage;
+        
+        select * from product;
+        select * from productsupplier;
+        select * from supplier;
+        
+        select pname, socialName  from product p 
+        inner join productsupplier on idPsProduct = p.idProduct
+        inner join supplier s on idPsSupplier = s.idSupplier;
+        
+        
+        
+        
 
         
     
