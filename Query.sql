@@ -755,6 +755,199 @@ select idClient, fname, count(*) as Number_of_orders from clients INNER JOIN ord
         inner join productsupplier on idPsProduct = p.idProduct
         inner join supplier s on idPsSupplier = s.idSupplier;
         
+        show tables;
+        drop table client;
+        
+        create database workshop;
+        use workshop;
+        show tables;
+create table client(
+	idClient int auto_increment primary key,
+	name varchar(45) not null,
+	phone varchar(45),
+	email varchar(45),
+    endereco varchar(45),
+    cpf varchar(45)
+);
+
+create table vehicle(
+	idVehicle int auto_increment primary key,
+	license varchar(45) not null,
+	brand varchar(45),
+	model varchar(45),
+    year varchar(45),
+    color varchar(45),
+    type varchar(45),
+    idClient int,
+    idOS int,
+    constraint fk_vehicle_client foreign key (idClient) references client(idClient),
+    constraint fk_vehicle_os foreign key (idOS) references os(idOS)
+);
+
+create table vehicleMechanical(
+	idVehicle int,
+	idMechanical int,
+    primary key(idVehicle,idMechanical),
+    constraint fk_vehicleMechanical_vehicle foreign key (idVehicle) references vehicle(idVehicle),
+    constraint fk_vehicleMechanical_mechanical foreign key (idMechanical) references mechanical(idMechanical)
+);
+
+create table mechanical(
+	idMechanical int auto_increment primary key,
+	name varchar(45),
+    cpf varchar(45),
+    email varchar(45),
+    phone varchar(45),
+    address varchar(45),
+    admissionDate datetime,
+    specialty varchar(45)
+);
+
+create table vehicleWorkshop(
+	idVehicle int,
+	idWorkshop int,
+    primary key(idVehicle,idWorkshop),
+    constraint fk_vehicleWorkshop_vehicle foreign key (idVehicle) references vehicle(idVehicle),
+    constraint fk_vehicleWorkshop_workshop foreign key (idWorkshop) references workshop(idWorkshop)
+);
+
+create table workshop(
+	idWorkshop int auto_increment primary key,
+	name varchar(45),
+    cnpj varchar(45),
+    email varchar(45),
+    phone varchar(45),
+    address varchar(45)
+);
+
+create table os(
+	idOS int auto_increment primary key,
+	value double,
+    deliveryDate datetime,
+    authorized boolean,
+    issueDate datetime,
+    status varchar(45)
+);
+
+create table osPiece(
+	idOS int,
+	idPiece int,
+    primary key(idOS,idPiece),
+    constraint fk_osPiece_os foreign key (idOS) references os(idOS),
+    constraint fk_osPiece_piece foreign key (idPiece) references piece(idPiece)
+);
+
+create table piece(
+	idPiece int auto_increment primary key,
+	name varchar(45),
+    value double
+);
+
+create table serviceVehicle(
+	idService int,
+	idVehicle int,
+    primary key(idService,idVehicle),
+    constraint fk_serviceVehicle_service foreign key (idService) references service(idService),
+    constraint fk_serviceVehicle_vehicle foreign key (idVehicle) references vehicle(idVehicle)
+);
+
+create table service(
+	idService int auto_increment primary key,
+	name varchar(45),
+    value double,
+    idManPower int,
+    constraint fk_service_manpower foreign key (idManPower) references manpower(idManPower)
+);
+
+create table manpower(
+	idManPower int auto_increment primary key,
+	name varchar(45),
+    value double
+);
+
+show tables;
+
+desc os;
+insert into client (name,
+phone,
+email,
+endereco,
+cpf) values ('Rafael','12312313','asdasd@asdas.com','sdaasd','123123123');
+
+insert into manpower (name,
+value) values ('Consertar carro', 300);
+
+insert into mechanical (name,
+cpf,
+email,
+phone,
+address,
+admissionDate,
+specialty) values ('Jose','123123123','asdas@asdasd.com','123123123','asdadsasds',now(),'Pintura');
+
+insert into os (value,
+deliveryDate,
+authorized,
+issueDate,
+status) values (300,now(),true,now(),'DONE');
+
+desc service;
+select * from piece;
+insert into ospiece (idOS,
+idPiece) values (1,1);
+
+insert into piece (name,
+value) values ('Parafuso',5);
+show tables;
+select * from manpower;
+insert into service (name,
+value,
+idManPower) values ('Pintura', 200, 1);
+desc vehiclemechanical;
+select * from mechanical;
+insert into servicevehicle (idService,
+idVehicle) values (1,1);
+insert into vehicle (license,
+brand,
+model,
+year,
+color,
+type,
+idClient,
+idOS) values ('asdasd','bmw','bmw','1990','blue','new',1,1);
+
+insert into vehiclemechanical (idVehicle,
+idMechanical) values (1,1);
+desc vehicleworkshop;
+insert into vehicleworkshop (idVehicle,
+idWorkshop) values (1,1);
+desc workshop;
+insert into workshop (name,
+cnpj,
+email,
+phone,
+address) values ('Bras','123123123','asdasd@asdasd.com','12312331','rua asdasd');
+
+select * from mechanical;
+
+select * from mechanical where name = 'Jose';
+
+select * from mechanical where name = 'Jose' order by name;
+
+select * from mechanical group by specialty having count(*) > 0;
+
+show tables;
+
+select c.name, v.license from client c 
+inner join vehicle v on c.idClient = v.idClient;
+
+
+
+
+
+
+
+        
         
         
         
