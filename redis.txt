@@ -1,0 +1,26 @@
+set user1:name "Bob Esponja"
+get user1:name
+set user '{"name": "Patrick", "age": 31}'
+get user
+set user2:name "Lula Molusco" EX 10
+get user2:name
+exists user2:name
+lpush user1:hobbies "Caçar agua viva"
+lpush user1:hobbies "Comer hamburguers"
+lindex user1:hobbies 0
+lindex user1:hobbies 1
+lrange user1:hobbies 0 1
+lrange user1:hobbies 0 0
+type user1:name
+type user1:hobbies
+ttl user1:name
+set user2:name "Patrick" EX 60
+ttl user2:name
+pttl user2:name
+get user2:name
+set user2:name "Patrick" EX 30
+ttl user2:name
+get user2:name
+persist user2:name
+del user2:name
+exists user2:name

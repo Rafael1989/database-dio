@@ -1,0 +1,25 @@
+show databases;
+use fenda_biquini;
+db.createCollection("test", {capped: true, max: 2, size: 2});
+show collections;
+db.test.insertOne({"name":"Teste 1"});
+db.test.find({});
+db.test.insertOne({"name":"Teste 2"});
+db.test.insertOne({"name":"Teste 3"});
+db.test2.insertOne({"age":10});
+db.test2.find({});
+db.clients.insert([{"name":"Patrick","age":38},{"name":"Bob Esponja"}])
+db.clients.find({})
+db.clients.save({ "_id" : ObjectId("632f2bc2957ad8f44f6fc808"), "name" : "Bob Esponjo" })
+db.clients.update({"name" : "Bob Esponjo"}, {$set :{"age":41}})
+db.clients.update({"age" : 41}, {$set :{"age":42}}, {multi:true})
+db.clients.updateMany({"age": 42},{$set: {"age":55}});
+db.clients.find({"age":38})
+db.clients.find({"age":38}).limit(1)
+db.clients.insertOne({"nome":"Patrick2","age":30})
+db.clients.find({"age":{$in: [30,99]}})
+db.clients.find({$or: [{"name":"Patrick2"}, {"age":30}]})
+db.clients.find({"age":{$lt:55}})
+db.clients.find({"age":{$lte:55}})
+db.clients.deleteOne({"age":55})
+db.clients.deleteMany({"age":55})

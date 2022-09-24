@@ -1,0 +1,24 @@
+CREATE KEYSPACE tutorialspoint WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+use tutorialspoint;
+CREATE COLUMNFAMILY sample (rowkey text, ts timestamp, PRIMARY KEY(rowkey));
+
+INSERT INTO sample (rowkey, ts ) VALUES ( '1','1366354711797');
+
+select age, writetime(age) from clients;
+select * from clients where name = 'Bob Esponja'
+
+select json * from clients;
+
+update clients set age=33 where name = 'Patrick';
+select json * from clients;
+
+alter columnfamily clients add hobby text;
+select * from clients;
+update cleints set hobby = 'Cacar agua viva' where name = 'Patrick';
+
+select * from clients;
+
+select age, writetime(age), hobby, writetime(hobby) from clients;
+
+select age, writetime(age), hobby, writetime(hobby) from clients where name = 'Patrick';
+delete from clients where name = 'Bob Esponja';
