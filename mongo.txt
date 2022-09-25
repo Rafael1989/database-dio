@@ -23,3 +23,21 @@ db.clients.find({"age":{$lt:55}})
 db.clients.find({"age":{$lte:55}})
 db.clients.deleteOne({"age":55})
 db.clients.deleteMany({"age":55})
+
+for(var i=0; i < 10000;i++){
+   db.clients.insert({name: "Cliente" + i, age:i});
+}
+db.getCollection('clients').count({})
+db.getCollection('clients').find({})
+db.getCollection('clients').find({_id: ObjectId('6330317d1acf61bef6b026fc')}).explain(true)
+db.getCollection('clients').find({_id: ObjectId('6330317d1acf61bef6b026fc')}).explain(true)
+db.getCollection('clients').find({name: 'Client0'}).explain(true)
+db.getCollection('clients').find({})
+
+db.getCollection('clients').createIndex({name: 1}, {'name': 'idx_name'})
+db.getCollection('restaurants').aggregate([{$group: {_id: "$cuisine", total: {$sum: 1}}}])
+db.getCollection('restaurants').aggregate([{$addFields: {"teste":true}}])
+db.getCollection('restaurants').aggregate([{$group: {_id: "$cuisine", total: {$sum: 1}, id_maximo: {$max: "$restaurant_id"}}}])
+db.getCollection('restaurants').aggregate([{$group: {_id: "$cuisine", total: {$sum: 1}, id_maximo: {$min: "$restaurant_id"}}}])
+db.getCollection('restaurants').aggregate([{$match : {$and: [{cuisine: "American"},{borough: "Brooklyn"}]}}])
+db.getCollection('restaurants').aggregate([{$match : {$or: [{cuisine: "American"},{borough: "Brooklyn"}]}}])
